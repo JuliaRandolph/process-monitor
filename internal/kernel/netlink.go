@@ -271,7 +271,8 @@ func (n *NetlinkCommunicator) sendMessage(data []byte) error {
 
 	// Serialize message
 	buf := make([]byte, nlMsg.Header.Len)
-	copy(buf[0:], (*(*[syscall.NLMSG_HDRLEN]byte)(unsafe.Pointer(&nlMsg.Header))[:])
+	headerBytes := (*(*[syscall.NLMSG_HDRLEN]byte)(unsafe.Pointer(&nlMsg.Header)))[:]
+	copy(buf[0:], headerBytes)
 	copy(buf[syscall.NLMSG_HDRLEN:], nlMsg.Data)
 
 	// Send message
@@ -291,8 +292,8 @@ func (n *NetlinkCommunicator) sendMessage(data []byte) error {
 func (n *NetlinkCommunicator) receiveMessage() ([]byte, error) {
 	// Set receive timeout
 	tv := syscall.Timeval{
-		Sec:  int(NetlinkTimeout.Seconds()),
-		Usec: int(NetlinkTimeout.Microseconds()) % 1000000,
+		Sec:  int64(NetlinkTimeout.Seconds()),
+		Usec: int64(NetlinkTimeout.Microseconds()) % 1000000,
 	}
 	syscall.SetsockoptTimeval(n.fd, syscall.SOL_SOCKET, syscall.SO_RCVTIMEO, &tv)
 

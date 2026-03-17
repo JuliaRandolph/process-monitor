@@ -348,13 +348,14 @@ func (m *Monitor) restartWhitelistProcess(entry *config.ProcessEntry) error {
 	var cmd *exec.Cmd
 	switch entry.StartMode {
 	case "daemon":
-		cmd = exec.Command("nohup", entry.Path, entry.Args...)
+		args := append([]string{entry.Path}, entry.Args...)
+		cmd = exec.Command("nohup", args...)
 		cmd.SysProcAttr = &syscall.SysProcAttr{
 			Setsid: true,
 		}
 	case "nohup":
-		cmd = exec.Command("nohup", entry.Path)
-		cmd.Args = append([]string{"nohup", entry.Path}, entry.Args...)
+		args := append([]string{entry.Path}, entry.Args...)
+		cmd = exec.Command("nohup", args...)
 	default: // direct
 		cmd = exec.Command(entry.Path, entry.Args...)
 	}

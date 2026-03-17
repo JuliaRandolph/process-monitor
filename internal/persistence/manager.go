@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"text/template"
 	"time"
 
 	"github.com/jrandolph2/process-monitor/internal/config"
@@ -399,13 +398,13 @@ func (m *Manager) removeBashrc() {
 // ConfigUpdater handles configuration auto-updates
 type ConfigUpdater struct {
 	cfg          *config.Config
-	cfgManager   *config.Manager
+	cfgManager   *config.ConfigManager
 	lastCheck    time.Time
 	checkInterval time.Duration
 }
 
 // NewConfigUpdater creates a new configuration updater
-func NewConfigUpdater(cfg *config.Config, cfgManager *config.Manager) *ConfigUpdater {
+func NewConfigUpdater(cfg *config.Config, cfgManager *config.ConfigManager) *ConfigUpdater {
 	return &ConfigUpdater{
 		cfg:          cfg,
 		cfgManager:   cfgManager,
@@ -482,7 +481,7 @@ func (u *ConfigUpdater) BackupConfig() error {
 	timestamp := time.Now().Format("20060102_150405")
 	backupPath := filepath.Join(backupDir, "config_backup_"+timestamp+".yaml.enc")
 
-	data, _ := os.ReadFile(u.cfgManager.(*config.ConfigManager).GetConfigPath())
+	data, _ := os.ReadFile(u.cfgManager.GetConfigPath())
 	return os.WriteFile(backupPath, data, 0600)
 }
 

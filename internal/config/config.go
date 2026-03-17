@@ -319,6 +319,11 @@ func (m *ConfigManager) Get() *Config {
 	return m.config
 }
 
+// GetConfigPath returns the configuration file path
+func (m *ConfigManager) GetConfigPath() string {
+	return m.configPath
+}
+
 // Reload reloads the configuration from file
 func (m *ConfigManager) Reload() (*Config, error) {
 	return m.Load()
