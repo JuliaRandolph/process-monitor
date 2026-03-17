@@ -1,0 +1,53 @@
+# Binaries
+*.o
+*.ko
+*.so
+*.a
+process-monitor-daemon
+config-publisher
+build/
+dist/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keys (never commit private keys!)
+*.pem
+id_ed25519*
+*.key
+
+# Temp files
+*.tmp
+/tmp/
+*.log
+
+# Config (may contain sensitive data)
+*.yaml.enc
+*.enc
+
+# Build artifacts
+Module.symvers
+modules.order
+
+# Compiled binaries
+/cmd/daemon/daemon
+/cmd/config-publisher/publisher
